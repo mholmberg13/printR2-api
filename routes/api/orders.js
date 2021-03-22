@@ -15,7 +15,8 @@ router.get('/', (req, res) => {
 // POST route for new order
 router.post('/', (req, res) => {
     const newOrder = new Order({
-        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         file: req.body.file
     })
@@ -35,7 +36,8 @@ router.post('/update/:id', (req, res) => {
         {_id: req.params.id},
         {
             $set: {
-                name: req.body.name,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
                 email: req.body.email,
                 file: req.body.file
             },
