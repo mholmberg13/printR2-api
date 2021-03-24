@@ -3,31 +3,36 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/orders';
 // import api
 const orders = require('./routes/api/orders')
 
 // nitializes the express app
 const app = express()
 
-// set up CORS
-app.use(cors())
-// convert API response to json
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+
 
 // import db credentials
-const db = require('./config/keys').mongoURI
+// const db = require('./config/keys').mongoURI
+
 
 // initializes db with credentials 
-mongoose.set('useFindAndModify', false)
-mongoose.set('useNewUrlParser', true)
-mongoose.set('useUnifiedTopology', true)
-mongoose
-    .connect(db, () => {}, {useNewUrlParser: true})
+mongoose.connect(MONGODB_URI, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    })
     .then(() => console.log('Mongo Database Connected'))
     .catch(err => console.log(err))
 
+
+app.use(express.json());
+
+// set up CORS
+app.use(cors())
+// convert API response to json
+// app.use(bodyParser.urlencoded({extended: true}))
+// app.use(bodyParser.json())
 
 // route for API interaction
 app.use('/api/orders', orders)
