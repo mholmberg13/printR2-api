@@ -38,7 +38,7 @@ app.use(cors())
 app.use('/api/orders', orders)
 
 // sets port number
-const port = process.env.PORT || 5001
+const port = process.env.PORT || 5000
 
 // initialize server
 server = app.listen(port, () => console.log(`Server running on port ${port}`))
