@@ -24,9 +24,12 @@ router.post('/', (req, res) => {
 })
 
 // DELETE route for orders
-router.delete('/', (req, res) => {
-    Order.findOneAndRemove({_id: req.body.id}).then(() => {
-        res.json({success: true})
+router.delete('/:id', (req, res) => {
+    Order.findByIdAndRemove(req.params.id, (err, deleteOrder) => {
+        if (err) {
+            res.status(400).json({ error: err.message })
+        }
+        res.status(200).json(deleteOrder)
     })
 })
 
