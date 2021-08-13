@@ -18,7 +18,14 @@ const OrderSchema = new Schema({
     file: {
         type: String,
         required: true
-    }
+    },
+    qty: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true    }
 })
 
 module.exports = Order = mongoose.model('order', OrderSchema)

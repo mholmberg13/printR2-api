@@ -18,7 +18,9 @@ router.post('/', (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        file: req.body.file
+        file: req.body.file,
+        qty: req.body.qty,
+        status: req.body.status
     })
     newOrder.save().then(info => res.json(info))
 })
