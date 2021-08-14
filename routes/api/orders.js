@@ -36,24 +36,13 @@ router.delete('/:id', (req, res) => {
 })
 
 // UPDATE route for orders
-router.post('/update/:id', (req, res) => {
-    Order.findOneAndUpdate(
-        {_id: req.params.id},
-        {
-            $set: {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email,
-                file: req.body.file
-            },
-
-        },
-        {new: true},
-    )
-        .then(info => {
-            res.json(info)
-        })
-        .catch(err => res.status(400).json({msg: 'update failed'}))
+router.put('/:id', (req, res) => {
+    Order.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedOrder) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+        }
+        res.status(200).json(updatedOrder)
+    })
 })
 
 module.exports = router
