@@ -1,7 +1,57 @@
 const express = require('express')
 const router = express.Router()
-
+const multer = require('multer')
+const { v4: uuidv4 } = require('uuid');
 const Order = require('../../models/Order')
+const File = require('../../models/File')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb)=>{
+        cb(null, 'images')
+    },
+    filename: function(req, file, cb){
+        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({storage})
+
+const obj = (req, res) => {
+    upload(req, res, () => {
+        console.log("Request ---", req.body)
+        console.log("Request file ---", req.file)
+        const file = new File()
+        file.meta_data = req.file
+        file.save().then(()=>{
+            res.send({message:"upload successful"})
+        })
+    })
+}
+
+router.route('/').post(upload.single('file'), (req, res) => {
+    const firstName = req.body.firstName
+    const lastName = req.body.lastName
+    const email = req.body.email
+    const file = req.body.file
+    const qty = req.body.qty
+    const status = req.body.status
+
+    const newOrderData = {
+        firstName,
+        lastName,
+        email,
+        file,
+        qty,
+        status
+    }
+
+    const newOrder = new Order(newOrderData)
+
+    newOrder.save()
+        .then(() => res.json('Order Added'))
+        .catch(err => res.status(400).json('Error: ' + err))
+    
+})
 
 router.get('/test', (req, res) => res.json({msg: 'back-end working.'}))
 
@@ -13,17 +63,17 @@ router.get('/', (req, res) => {
 })
 
 // POST route for new order
-router.post('/', (req, res) => {
-    const newOrder = new Order({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        file: req.body.file,
-        qty: req.body.qty,
-        status: req.body.status
-    })
-    newOrder.save().then(info => res.json(info))
-})
+// router.post('/', (req, res) => {
+//     const newOrder = new Order({
+//         firstName: req.body.firstName,
+//         lastName: req.body.lastName,
+//         email: req.body.email,
+//         file: req.body.file,
+//         qty: req.body.qty,
+//         status: req.body.status
+//     })
+//     newOrder.save().then(info => res.json(info))
+// })
 
 // DELETE route for orders
 router.delete('/:id', (req, res) => {
