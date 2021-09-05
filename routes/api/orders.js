@@ -5,16 +5,19 @@ const { v4: uuidv4 } = require('uuid');
 const Order = require('../../models/Order')
 const File = require('../../models/File')
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb)=>{
-        cb(null, 'images')
-    },
-    filename: function(req, file, cb){
-        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname))
+const storageEngine = multer.diskStorage({
+    destination: './public/uploads',
+    filename: function (req, file, callback) {
+        callback (
+            null,
+            file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+        )
     }
 })
 
-const upload = multer({storage})
+const upload = multer({
+    storage: storageEngine
+})
 
 const obj = (req, res) => {
     upload(req, res, () => {
@@ -28,7 +31,8 @@ const obj = (req, res) => {
     })
 }
 
-router.route('/').post(upload.single('file'), (req, res) => {
+router.post('/', upload.single('file'), (req, res) => {
+
     const firstName = req.body.firstName
     const lastName = req.body.lastName
     const email = req.body.email
