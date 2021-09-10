@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const { v4: uuidv4 } = require('uuid');
-const Order = require('../../models/Order')
-const File = require('../../models/File')
+const Order = require('../models/Order')
+const File = require('../models/File')
 
 const storageEngine = multer.diskStorage({
     destination: './public/uploads',
@@ -18,18 +18,6 @@ const storageEngine = multer.diskStorage({
 const upload = multer({
     storage: storageEngine
 })
-
-const obj = (req, res) => {
-    upload(req, res, () => {
-        console.log("Request ---", req.body)
-        console.log("Request file ---", req.file)
-        const file = new File()
-        file.meta_data = req.file
-        file.save().then(()=>{
-            res.send({message:"upload successful"})
-        })
-    })
-}
 
 router.post('/', upload.single('file'), (req, res) => {
 
@@ -52,7 +40,7 @@ router.post('/', upload.single('file'), (req, res) => {
     const newOrder = new Order(newOrderData)
 
     newOrder.save()
-        .then(() => res.json('Order Added'))
+        // .then(() => res.json())
         .catch(err => res.status(400).json('Error: ' + err))
     
 })

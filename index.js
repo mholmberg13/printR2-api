@@ -1,32 +1,31 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/orders';
+const MONGODB_URI = process.env.MONGODB_URL;
 // import api
-const orders = require('./routes/api/orders')
+const orders = require('./routes/orders')
 
 // nitializes the express app
 const app = express()
-
+app.use(express.json());
 
 
 // import db credentials
 // const db = require('./config/keys').mongoURI
-
+app.use('/user', require('./routes/UserRouter.js'))
 
 // initializes db with credentials 
 mongoose.connect(MONGODB_URI, {
+        useCreateIndex: true,
         useNewUrlParser: true,
         useFindAndModify: false,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
     })
-    .then(() => console.log('Mongo Database Connected'))
+    .then(() => console.log('Mongo Database Connected to: ' + MONGODB_URI))
     .catch(err => console.log(err))
 
-
-app.use(express.json());
 
 // set up CORS
 app.use(cors())
