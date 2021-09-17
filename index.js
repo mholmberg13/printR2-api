@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 
 const MONGODB_URI = process.env.MONGODB_URL;
 // import api
@@ -10,6 +11,7 @@ const orders = require('./routes/orders')
 // nitializes the express app
 const app = express()
 app.use(express.json());
+app.use(cookieParser())
 
 
 // import db credentials
