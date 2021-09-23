@@ -166,6 +166,30 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
+    },
+    updateUser: async (req, res) => {
+        try {
+            const {firstName} = req.body
+            await Users.findOneAndUpdate({_id: req.user.id}, {
+                firstName
+            })
+
+            res.json({msg: "Update Success"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    updateUserRole: async (req, res) => {
+        try {
+            const {role} = req.body
+            await Users.findOneAndUpdate({_id: req.user.id}, {
+                role
+            })
+
+            res.json({msg: "Update Success"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
     }
 
 }
