@@ -182,7 +182,7 @@ const userCtrl = {
     updateUserRole: async (req, res) => {
         try {
             const {role} = req.body
-            await Users.findOneAndUpdate({_id: req.user.id}, {
+            await Users.findOneAndUpdate({_id: req.params.id}, {
                 role
             })
 
@@ -190,7 +190,16 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    }
+    },
+    deleteUser: async (req, res) => {
+        try {
+            await Users.findByIdAndDelete(req.params.id)
+
+            res.json({msg: "Delete Success"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
 
 }
 
