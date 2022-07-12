@@ -25,7 +25,11 @@ const OrderSchema = new Schema({
     },
     status: {
         type: String,
-        required: true    }
+        required: true    
+    },
+    userId: {
+        type: String
+    }
 })
 
 module.exports = Order = mongoose.model('order', OrderSchema)

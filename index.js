@@ -1,22 +1,36 @@
+// const { urlencoded, json } = require('body-parser');
+// import { resolve } from  'path';
+// import { uploader, cloudinaryConfig } from './config/cloudinaryConfig';
+// import { multerUploads, dataUri } from './middlewares/multerUpload';
+
+
+
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const fileUpload = require('express-fileupload')
 const cookieParser = require('cookie-parser')
 
 const MONGODB_URI = process.env.MONGODB_URL;
 // import api
 const orders = require('./routes/orders')
 
-// nitializes the express app
+// initializes the express app
 const app = express()
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload({
+    useTempFiles: true
+}))
 
 
-// import db credentials
-// const db = require('./config/keys').mongoURI
+
+
+
 app.use('/user', require('./routes/UserRouter.js'))
+app.use('/api', require('./routes/upload.js'))
 
 // initializes db with credentials 
 mongoose.connect(MONGODB_URI, {
@@ -39,7 +53,7 @@ app.use(cors())
 app.use('/api/orders', orders)
 
 // sets port number
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5001
 
 // initialize server
 server = app.listen(port, () => console.log(`Server running on port ${port}`))
